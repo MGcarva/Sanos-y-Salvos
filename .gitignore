@@ -1,0 +1,33 @@
+# Environment files
+.env
+.env.production
+.env.local
+*.pem
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.log
+
+# Node.js
+node_modules/
+dist/
+coverage/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Backups
+backups/
