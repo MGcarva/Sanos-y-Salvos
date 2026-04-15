@@ -41,6 +41,7 @@ jwt:
 
 app:
   auto-verify-email: ${AUTO_VERIFY_EMAIL:false}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
 
 springdoc:
   api-docs:

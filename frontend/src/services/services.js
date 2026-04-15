@@ -15,8 +15,9 @@ export const reportesService = {
         const formData = new FormData();
         formData.append('reporte', new Blob([JSON.stringify(reporte)], { type: 'application/json' }));
         if (foto) formData.append('foto', foto);
+        // No fijar Content-Type manualmente: axios detecta FormData y agrega el boundary correcto
         return api.post('/reportes', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: { 'Content-Type': undefined }
         });
     },
     actualizarEstado: (id, estado) => api.patch(`/reportes/${id}/estado`, null, { params: { estado } })

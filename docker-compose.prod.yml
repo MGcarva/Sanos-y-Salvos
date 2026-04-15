@@ -153,6 +153,7 @@ services:
       MAIL_PORT: ${MAIL_PORT:-1025}
       MAIL_USER: ${MAIL_USER:-}
       MAIL_PASS: ${MAIL_PASS:-}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       JAVA_OPTS: "-Xms128m -Xmx256m"
     ports:
       - "127.0.0.1:8081:8081"
