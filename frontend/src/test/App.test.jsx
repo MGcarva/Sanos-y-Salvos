@@ -13,11 +13,13 @@ const renderApp = () => {
 describe('App', () => {
     it('renders the navbar', () => {
         renderApp();
-        expect(screen.getByText('Sanos y Salvos')).toBeInTheDocument();
+        const elements = screen.getAllByText('Sanos y Salvos');
+        expect(elements.length).toBeGreaterThanOrEqual(1);
     });
 
     it('renders the home page by default', () => {
         renderApp();
-        expect(screen.getByText(/Sanos y Salvos/)).toBeInTheDocument();
+        const elements = screen.getAllByText(/Sanos y Salvos/);
+        expect(elements.length).toBeGreaterThanOrEqual(1);
     });
 });

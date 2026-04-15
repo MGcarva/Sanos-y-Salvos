@@ -1,5 +1,6 @@
 package com.sanosysalvos.bff.controller;
 
+import com.sanosysalvos.bff.service.DashboardService;
 import com.sanosysalvos.bff.service.MascotasProxyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class ReportesController {
 
     private final MascotasProxyService mascotasProxy;
+    private final DashboardService dashboardService;
 
     @GetMapping
     public ResponseEntity<List> listarActivos() {
@@ -35,7 +37,9 @@ public class ReportesController {
             @RequestPart(value = "foto", required = false) MultipartFile foto,
             Authentication authentication) {
         String token = (String) authentication.getCredentials();
-        return mascotasProxy.crear(reporteJson, foto, token);
+        ResponseEntity<Map> response = mascotasProxy.crear(reporteJson, foto, token);
+        dashboardService.invalidateCache();
+        return response;
     }
 
     @GetMapping("/mis-reportes")
@@ -43,5 +47,16 @@ public class ReportesController {
         String userId = (String) authentication.getPrincipal();
         String token = (String) authentication.getCredentials();
         return mascotasProxy.listarPorUsuario(userId, token);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Map> actualizarEstado(
+            @PathVariable String id,
+            @RequestParam String estado,
+            Authentication authentication) {
+        String token = (String) authentication.getCredentials();
+        ResponseEntity<Map> response = mascotasProxy.actualizarEstado(id, estado, token);
+        dashboardService.invalidateCache();
+        return response;
     }
 }

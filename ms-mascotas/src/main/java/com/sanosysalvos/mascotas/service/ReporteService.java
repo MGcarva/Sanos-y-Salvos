@@ -48,6 +48,12 @@ public class ReporteService {
                 .collect(Collectors.toList());
     }
 
+    public List<ReporteResponseDTO> listarTodos() {
+        return reporteRepository.findAllByOrderByCreatedAtDesc().stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
     public ReporteResponseDTO obtenerPorId(UUID id) {
         Reporte reporte = reporteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reporte no encontrado: " + id));

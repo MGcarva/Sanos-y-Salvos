@@ -70,4 +70,13 @@ public class DashboardService {
 
         return dashboard;
     }
+
+    public void invalidateCache() {
+        try {
+            redisTemplate.delete("dashboard:all");
+            log.debug("Dashboard cache invalidated");
+        } catch (Exception e) {
+            log.warn("Error invalidando cache: {}", e.getMessage());
+        }
+    }
 }

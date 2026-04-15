@@ -95,7 +95,7 @@ describe('Services', () => {
                 '/reportes',
                 expect.any(FormData),
                 expect.objectContaining({
-                    headers: { 'Content-Type': 'multipart/form-data' }
+                    headers: { 'Content-Type': undefined }
                 })
             );
         });

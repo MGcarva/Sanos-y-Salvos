@@ -19,6 +19,8 @@ public interface ReporteRepository extends JpaRepository<Reporte, UUID> {
     @Query("SELECT r FROM Reporte r WHERE r.estado = 'ACTIVO' ORDER BY r.createdAt DESC")
     List<Reporte> findAllActivos();
 
+    List<Reporte> findAllByOrderByCreatedAtDesc();
+
     @Query("SELECT r FROM Reporte r WHERE r.estado = 'ACTIVO' AND r.especie = :especie")
     List<Reporte> findActivosByEspecie(String especie);
 }

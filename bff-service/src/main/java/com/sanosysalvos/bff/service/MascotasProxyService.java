@@ -29,6 +29,11 @@ public class MascotasProxyService {
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
+    public ResponseEntity<List> listarTodos() {
+        ResponseEntity<List> r = restTemplate.getForEntity(mascotasUrl + "/api/reportes/todos", List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
+    }
+
     public ResponseEntity<Map> obtenerPorId(String id) {
         ResponseEntity<Map> r = restTemplate.getForEntity(mascotasUrl + "/api/reportes/" + id, Map.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
@@ -70,6 +75,16 @@ public class MascotasProxyService {
         headers.setBearerAuth(token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<List> r = restTemplate.exchange(mascotasUrl + "/api/reportes/usuario/" + userId, HttpMethod.GET, entity, List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
+    }
+
+    public ResponseEntity<Map> actualizarEstado(String id, String estado, String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ResponseEntity<Map> r = restTemplate.exchange(
+                mascotasUrl + "/api/reportes/" + id + "/estado?estado=" + estado,
+                HttpMethod.PATCH, entity, Map.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 }

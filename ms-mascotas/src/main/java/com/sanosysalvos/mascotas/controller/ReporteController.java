@@ -42,6 +42,12 @@ public class ReporteController {
         return ResponseEntity.ok(reporteService.listarActivos());
     }
 
+    @GetMapping("/todos")
+    @Operation(summary = "Listar todos los reportes")
+    public ResponseEntity<List<ReporteResponseDTO>> listarTodos() {
+        return ResponseEntity.ok(reporteService.listarTodos());
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Obtener reporte por ID")
     public ResponseEntity<ReporteResponseDTO> obtenerPorId(@PathVariable UUID id) {

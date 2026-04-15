@@ -48,7 +48,7 @@ export default function ReporteDetalle() {
                 const fn = res.data.tipo === 'PERDIDO'
                     ? coincidenciasService.porPerdido(id)
                     : coincidenciasService.porEncontrado(id);
-                return fn;
+                return fn.catch(() => ({ data: [] }));
             })
             .then(res => setCoincidencias(res.data || []))
             .catch(() => setError('No se pudo cargar el reporte'))
