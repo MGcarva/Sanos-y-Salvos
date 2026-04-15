@@ -25,11 +25,13 @@ public class MascotasProxyService {
     private String mascotasUrl;
 
     public ResponseEntity<List> listarActivos() {
-        return restTemplate.getForEntity(mascotasUrl + "/api/reportes", List.class);
+        ResponseEntity<List> r = restTemplate.getForEntity(mascotasUrl + "/api/reportes", List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<Map> obtenerPorId(String id) {
-        return restTemplate.getForEntity(mascotasUrl + "/api/reportes/" + id, Map.class);
+        ResponseEntity<Map> r = restTemplate.getForEntity(mascotasUrl + "/api/reportes/" + id, Map.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<Map> crear(String reporteJson, MultipartFile foto, String token) {
@@ -59,13 +61,15 @@ public class MascotasProxyService {
         }
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        return restTemplate.postForEntity(mascotasUrl + "/api/reportes", requestEntity, Map.class);
+        ResponseEntity<Map> r = restTemplate.postForEntity(mascotasUrl + "/api/reportes", requestEntity, Map.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<List> listarPorUsuario(String userId, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        return restTemplate.exchange(mascotasUrl + "/api/reportes/usuario/" + userId, HttpMethod.GET, entity, List.class);
+        ResponseEntity<List> r = restTemplate.exchange(mascotasUrl + "/api/reportes/usuario/" + userId, HttpMethod.GET, entity, List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 }

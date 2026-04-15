@@ -21,10 +21,12 @@ public class CoincidenciasProxyService {
     private String coincidenciasUrl;
 
     public ResponseEntity<List> buscarPorPerdido(String reporteId) {
-        return restTemplate.getForEntity(coincidenciasUrl + "/api/coincidencias/perdido/" + reporteId, List.class);
+        ResponseEntity<List> r = restTemplate.getForEntity(coincidenciasUrl + "/api/coincidencias/perdido/" + reporteId, List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<List> buscarPorEncontrado(String reporteId) {
-        return restTemplate.getForEntity(coincidenciasUrl + "/api/coincidencias/encontrado/" + reporteId, List.class);
+        ResponseEntity<List> r = restTemplate.getForEntity(coincidenciasUrl + "/api/coincidencias/encontrado/" + reporteId, List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 }

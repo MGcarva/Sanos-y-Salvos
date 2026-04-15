@@ -22,18 +22,22 @@ public class AuthProxyService {
     private String authUrl;
 
     public ResponseEntity<Map> register(Map<String, Object> body) {
-        return restTemplate.postForEntity(authUrl + "/api/auth/register", body, Map.class);
+        ResponseEntity<Map> r = restTemplate.postForEntity(authUrl + "/api/auth/register", body, Map.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<Map> login(Map<String, Object> body) {
-        return restTemplate.postForEntity(authUrl + "/api/auth/login", body, Map.class);
+        ResponseEntity<Map> r = restTemplate.postForEntity(authUrl + "/api/auth/login", body, Map.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<Map> refresh(Map<String, Object> body) {
-        return restTemplate.postForEntity(authUrl + "/api/auth/refresh", body, Map.class);
+        ResponseEntity<Map> r = restTemplate.postForEntity(authUrl + "/api/auth/refresh", body, Map.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<Map> verifyEmail(String token) {
-        return restTemplate.getForEntity(authUrl + "/api/auth/verify-email?token=" + token, Map.class);
+        ResponseEntity<Map> r = restTemplate.getForEntity(authUrl + "/api/auth/verify-email?token=" + token, Map.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 }

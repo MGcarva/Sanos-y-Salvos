@@ -25,16 +25,19 @@ public class GeoProxyService {
         if (tipo != null && !tipo.isBlank()) {
             url += "?tipo=" + tipo;
         }
-        return restTemplate.getForEntity(url, List.class);
+        ResponseEntity<List> r = restTemplate.getForEntity(url, List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<List> getNearby(Double lat, Double lng, Double radiusMeters) {
-        return restTemplate.getForEntity(
+        ResponseEntity<List> r = restTemplate.getForEntity(
                 geoUrl + "/api/geo/nearby?lat=" + lat + "&lng=" + lng + "&radiusMeters=" + radiusMeters,
                 List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
     public ResponseEntity<List> getClusters() {
-        return restTemplate.getForEntity(geoUrl + "/api/geo/clusters", List.class);
+        ResponseEntity<List> r = restTemplate.getForEntity(geoUrl + "/api/geo/clusters", List.class);
+        return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 }
