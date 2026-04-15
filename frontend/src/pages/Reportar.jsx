@@ -132,6 +132,7 @@ export default function Reportar() {
         try {
             const reporte = {
                 ...form,
+                fechaEvento: form.fechaEvento ? `${form.fechaEvento}T00:00:00` : null,
                 lat: form.lat ? parseFloat(form.lat) : null,
                 lng: form.lng ? parseFloat(form.lng) : null,
                 recompensa: form.recompensa ? parseFloat(form.recompensa) : null
