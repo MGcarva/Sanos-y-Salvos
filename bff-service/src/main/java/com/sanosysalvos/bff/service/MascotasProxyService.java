@@ -24,22 +24,26 @@ public class MascotasProxyService {
     @Value("${services.mascotas-url}")
     private String mascotasUrl;
 
-    public ResponseEntity<List> listarActivos() {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<List<Object>> listarActivos() {
         ResponseEntity<List> r = restTemplate.getForEntity(mascotasUrl + "/api/reportes", List.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<List> listarTodos() {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<List<Object>> listarTodos() {
         ResponseEntity<List> r = restTemplate.getForEntity(mascotasUrl + "/api/reportes/todos", List.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<Map> obtenerPorId(String id) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<Map<String, Object>> obtenerPorId(String id) {
         ResponseEntity<Map> r = restTemplate.getForEntity(mascotasUrl + "/api/reportes/" + id, Map.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<Map> crear(String reporteJson, MultipartFile foto, String token) {
+    @SuppressWarnings({"rawtypes", "unchecked", "null"})
+    public ResponseEntity<Map<String, Object>> crear(String reporteJson, MultipartFile foto, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setBearerAuth(token);
@@ -52,7 +56,8 @@ public class MascotasProxyService {
         if (foto != null && !foto.isEmpty()) {
             try {
                 HttpHeaders fileHeaders = new HttpHeaders();
-                fileHeaders.setContentType(MediaType.parseMediaType(foto.getContentType()));
+                fileHeaders.setContentType(MediaType.parseMediaType(
+                        foto.getContentType() != null ? foto.getContentType() : "application/octet-stream"));
                 ByteArrayResource resource = new ByteArrayResource(foto.getBytes()) {
                     @Override
                     public String getFilename() {
@@ -70,7 +75,8 @@ public class MascotasProxyService {
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<List> listarPorUsuario(String userId, String token) {
+    @SuppressWarnings({"rawtypes", "unchecked", "null"})
+    public ResponseEntity<List<Object>> listarPorUsuario(String userId, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
@@ -78,7 +84,8 @@ public class MascotasProxyService {
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<Map> actualizarEstado(String id, String estado, String token) {
+    @SuppressWarnings({"rawtypes", "unchecked", "null"})
+    public ResponseEntity<Map<String, Object>> actualizarEstado(String id, String estado, String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<?> entity = new HttpEntity<>(headers);

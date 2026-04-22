@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +19,14 @@ public class CoincidenciasProxyService {
     @Value("${services.coincidencias-url}")
     private String coincidenciasUrl;
 
-    public ResponseEntity<List> buscarPorPerdido(String reporteId) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<List<Object>> buscarPorPerdido(String reporteId) {
         ResponseEntity<List> r = restTemplate.getForEntity(coincidenciasUrl + "/api/coincidencias/perdido/" + reporteId, List.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<List> buscarPorEncontrado(String reporteId) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<List<Object>> buscarPorEncontrado(String reporteId) {
         ResponseEntity<List> r = restTemplate.getForEntity(coincidenciasUrl + "/api/coincidencias/encontrado/" + reporteId, List.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }

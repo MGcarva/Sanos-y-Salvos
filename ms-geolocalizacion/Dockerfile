@@ -3,7 +3,11 @@ WORKDIR /app
 COPY pom.xml ./pom.xml
 COPY ms-geolocalizacion/pom.xml ./ms-geolocalizacion/pom.xml
 COPY ms-geolocalizacion/src ./ms-geolocalizacion/src
-RUN apk add --no-cache maven && mvn -f ms-geolocalizacion/pom.xml clean package -Dmaven.test.skip=true
+RUN apk add --no-cache maven && mvn -f ms-geolocalizacion/pom.xml clean package -Dmaven.test.skip=true \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
+    -Dmaven.wagon.http.connectionTimeout=60000 \
+    -Dmaven.wagon.http.readTimeout=120000
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app

@@ -15,6 +15,7 @@ class ScoringServiceTest {
     private ScoringService scoringService;
 
     @BeforeEach
+    @SuppressWarnings("null")
     void setUp() {
         scoringService = new ScoringService();
         ReflectionTestUtils.setField(scoringService, "razaWeight", 30);

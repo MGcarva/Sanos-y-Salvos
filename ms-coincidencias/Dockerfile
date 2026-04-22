@@ -3,7 +3,11 @@ WORKDIR /app
 COPY pom.xml ./pom.xml
 COPY ms-coincidencias/pom.xml ./ms-coincidencias/pom.xml
 COPY ms-coincidencias/src ./ms-coincidencias/src
-RUN apk add --no-cache maven && mvn -f ms-coincidencias/pom.xml clean package -Dmaven.test.skip=true
+RUN apk add --no-cache maven && mvn -f ms-coincidencias/pom.xml clean package -Dmaven.test.skip=true \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
+    -Dmaven.wagon.http.connectionTimeout=60000 \
+    -Dmaven.wagon.http.readTimeout=120000
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app

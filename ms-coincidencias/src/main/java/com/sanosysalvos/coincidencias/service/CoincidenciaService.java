@@ -24,6 +24,7 @@ public class CoincidenciaService {
     private final CandidateLoaderService candidateLoader;
 
     @Transactional
+    @SuppressWarnings("null")
     public List<Coincidencia> procesarEvento(GeoCompletadoEvent event) {
         List<CandidatoDTO> candidates = candidateLoader.loadCandidates(event);
         log.info("Candidatos encontrados para reporte {}: {}", event.getReporteId(), candidates.size());
@@ -75,6 +76,7 @@ public class CoincidenciaService {
     }
 
     @Transactional
+    @SuppressWarnings("null")
     public CoincidenciaResponseDTO actualizarEstado(UUID id, Coincidencia.EstadoCoincidencia estado) {
         Coincidencia c = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Coincidencia no encontrada: " + id));

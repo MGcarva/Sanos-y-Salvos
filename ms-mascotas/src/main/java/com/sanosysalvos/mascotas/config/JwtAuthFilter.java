@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import org.springframework.lang.NonNull;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -32,9 +32,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = extractToken(request);
         if (token != null) {
             try {

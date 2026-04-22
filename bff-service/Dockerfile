@@ -3,7 +3,11 @@ WORKDIR /app
 COPY pom.xml ./pom.xml
 COPY bff-service/pom.xml ./bff-service/pom.xml
 COPY bff-service/src ./bff-service/src
-RUN apk add --no-cache maven && mvn -f bff-service/pom.xml clean package -Dmaven.test.skip=true
+RUN apk add --no-cache maven && mvn -f bff-service/pom.xml clean package -Dmaven.test.skip=true \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
+    -Dmaven.wagon.http.connectionTimeout=60000 \
+    -Dmaven.wagon.http.readTimeout=120000
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app

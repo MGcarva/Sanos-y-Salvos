@@ -40,6 +40,7 @@ public class EventPublisher {
         log.info("Evento publicado para reporte {}", reporte.getId());
     }
 
+    @SuppressWarnings("unused")
     private void publishFallback(Reporte reporte, Throwable t) {
         log.error("CircuitBreaker: fallo publicando evento para reporte {}. Error: {}",
                 reporte.getId(), t.getMessage());

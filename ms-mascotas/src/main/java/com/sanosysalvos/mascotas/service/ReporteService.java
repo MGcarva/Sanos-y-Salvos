@@ -25,6 +25,7 @@ public class ReporteService {
     private final EventPublisher eventPublisher;
 
     @Transactional
+    @SuppressWarnings("null")
     public ReporteResponseDTO crearReporte(ReporteRequestDTO dto, MultipartFile foto, UUID userId) {
         Reporte reporte = reporteFactory.crear(dto, userId);
 
@@ -54,6 +55,7 @@ public class ReporteService {
                 .collect(Collectors.toList());
     }
 
+    @SuppressWarnings("null")
     public ReporteResponseDTO obtenerPorId(UUID id) {
         Reporte reporte = reporteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reporte no encontrado: " + id));
@@ -67,6 +69,7 @@ public class ReporteService {
     }
 
     @Transactional
+    @SuppressWarnings("null")
     public ReporteResponseDTO actualizarEstado(UUID id, Reporte.EstadoReporte estado) {
         Reporte reporte = reporteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reporte no encontrado: " + id));

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +19,8 @@ public class GeoProxyService {
     @Value("${services.geo-url}")
     private String geoUrl;
 
-    public ResponseEntity<List> getHeatmap(String tipo) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<List<Object>> getHeatmap(String tipo) {
         String url = geoUrl + "/api/geo/heatmap";
         if (tipo != null && !tipo.isBlank()) {
             url += "?tipo=" + tipo;
@@ -29,14 +29,16 @@ public class GeoProxyService {
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<List> getNearby(Double lat, Double lng, Double radiusMeters) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<List<Object>> getNearby(Double lat, Double lng, Double radiusMeters) {
         ResponseEntity<List> r = restTemplate.getForEntity(
                 geoUrl + "/api/geo/nearby?lat=" + lat + "&lng=" + lng + "&radiusMeters=" + radiusMeters,
                 List.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }
 
-    public ResponseEntity<List> getClusters() {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public ResponseEntity<List<Object>> getClusters() {
         ResponseEntity<List> r = restTemplate.getForEntity(geoUrl + "/api/geo/clusters", List.class);
         return ResponseEntity.status(r.getStatusCode()).body(r.getBody());
     }

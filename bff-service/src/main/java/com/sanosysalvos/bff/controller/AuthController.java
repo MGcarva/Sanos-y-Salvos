@@ -17,22 +17,22 @@ public class AuthController {
     private final AuthProxyService authProxy;
 
     @PostMapping("/register")
-    public ResponseEntity<Map> register(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, Object> body) {
         return authProxy.register(body);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map> login(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, Object> body) {
         return authProxy.login(body);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Map> refresh(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<Map<String, Object>> refresh(@RequestBody Map<String, Object> body) {
         return authProxy.refresh(body);
     }
 
     @GetMapping("/verify-email")
-    public ResponseEntity<Map> verifyEmail(@RequestParam String token) {
+    public ResponseEntity<Map<String, Object>> verifyEmail(@RequestParam String token) {
         return authProxy.verifyEmail(token);
     }
 }

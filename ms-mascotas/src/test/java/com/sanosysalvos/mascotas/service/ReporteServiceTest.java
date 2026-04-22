@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class ReporteServiceTest {
 
     @Mock private ReporteRepository reporteRepository;
@@ -58,6 +59,7 @@ class ReporteServiceTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void crearReporte_sinFoto_success() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("PERDIDO")
@@ -84,6 +86,7 @@ class ReporteServiceTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void crearReporte_conFoto_success() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("PERDIDO")
@@ -125,6 +128,7 @@ class ReporteServiceTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void obtenerPorId_found() {
         when(reporteRepository.findById(testReporte.getId())).thenReturn(Optional.of(testReporte));
 
@@ -134,6 +138,7 @@ class ReporteServiceTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void obtenerPorId_notFound_throwsException() {
         UUID randomId = UUID.randomUUID();
         when(reporteRepository.findById(randomId)).thenReturn(Optional.empty());
@@ -154,6 +159,7 @@ class ReporteServiceTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void actualizarEstado_success() {
         when(reporteRepository.findById(testReporte.getId())).thenReturn(Optional.of(testReporte));
         when(reporteRepository.save(any(Reporte.class))).thenReturn(testReporte);
@@ -165,6 +171,7 @@ class ReporteServiceTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void crearReporte_perdido_includesRecompensa() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("PERDIDO")

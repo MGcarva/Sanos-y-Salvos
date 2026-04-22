@@ -1,5 +1,6 @@
 package com.sanosysalvos.bff.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,14 @@ public class DashboardService {
     @Value("${cache.dashboard.ttl}")
     private long cacheTtl;
 
+    @SuppressWarnings("null")
     public Map<String, Object> getDashboard() {
         String cacheKey = "dashboard:all";
         try {
             String cached = redisTemplate.opsForValue().get(cacheKey);
             if (cached != null) {
                 log.debug("Dashboard cache HIT");
-                return objectMapper.readValue(cached, Map.class);
+                return objectMapper.readValue(cached, new TypeReference<Map<String, Object>>() {});
             }
         } catch (Exception e) {
             log.warn("Error leyendo cache: {}", e.getMessage());

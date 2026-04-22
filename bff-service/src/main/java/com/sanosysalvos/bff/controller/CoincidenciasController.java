@@ -17,12 +17,12 @@ public class CoincidenciasController {
     private final CoincidenciasProxyService coincidenciasProxy;
 
     @GetMapping("/perdido/{reporteId}")
-    public ResponseEntity<List> porPerdido(@PathVariable String reporteId) {
+    public ResponseEntity<List<Object>> porPerdido(@PathVariable String reporteId) {
         return coincidenciasProxy.buscarPorPerdido(reporteId);
     }
 
     @GetMapping("/encontrado/{reporteId}")
-    public ResponseEntity<List> porEncontrado(@PathVariable String reporteId) {
+    public ResponseEntity<List<Object>> porEncontrado(@PathVariable String reporteId) {
         return coincidenciasProxy.buscarPorEncontrado(reporteId);
     }
 }

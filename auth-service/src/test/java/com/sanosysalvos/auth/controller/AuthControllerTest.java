@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sanosysalvos.auth.domain.User.RolUsuario;
 import com.sanosysalvos.auth.dto.*;
 import com.sanosysalvos.auth.service.AuthService;
+import com.sanosysalvos.auth.service.RateLimitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.bean.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,13 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@SuppressWarnings("null")
 class AuthControllerTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
     @MockBean private AuthService authService;
+    @MockBean private RateLimitService rateLimitService;
 
     @Test
+    @SuppressWarnings("null")
     void register_validRequest_returns201() throws Exception {
         RegisterRequestDTO request = RegisterRequestDTO.builder()
                 .nombre("Test User")
@@ -59,6 +63,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void register_missingEmail_returns400() throws Exception {
         RegisterRequestDTO request = RegisterRequestDTO.builder()
                 .nombre("Test User")
@@ -72,6 +77,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void register_invalidEmail_returns400() throws Exception {
         RegisterRequestDTO request = RegisterRequestDTO.builder()
                 .nombre("Test User")
@@ -86,6 +92,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void login_validRequest_returns200() throws Exception {
         LoginRequestDTO request = LoginRequestDTO.builder()
                 .email("test@example.com")
@@ -112,6 +119,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void login_missingPassword_returns400() throws Exception {
         LoginRequestDTO request = LoginRequestDTO.builder()
                 .email("test@example.com")
@@ -124,6 +132,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void refresh_validRequest_returns200() throws Exception {
         RefreshTokenRequestDTO request = RefreshTokenRequestDTO.builder()
                 .refreshToken("valid-token")
@@ -149,6 +158,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @SuppressWarnings("null")
     void verifyEmail_validToken_returns200() throws Exception {
         when(authService.verifyEmail("valid-token")).thenReturn("Email verificado exitosamente");
 

@@ -32,6 +32,7 @@ public class AuthService {
     private boolean autoVerifyEmail;
 
     @Transactional
+    @SuppressWarnings("null")
     public AuthResponseDTO register(RegisterRequestDTO request, String clientIp) {
         if (rateLimitService.isRateLimited(clientIp)) {
             throw new RuntimeException("Demasiadas solicitudes. Intente más tarde.");
@@ -147,6 +148,7 @@ public class AuthService {
         }
     }
 
+    @SuppressWarnings("null")
     private String createRefreshToken(User user) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)

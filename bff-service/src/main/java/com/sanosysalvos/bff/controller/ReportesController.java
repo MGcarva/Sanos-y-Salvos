@@ -22,40 +22,40 @@ public class ReportesController {
     private final DashboardService dashboardService;
 
     @GetMapping
-    public ResponseEntity<List> listarActivos() {
+    public ResponseEntity<List<Object>> listarActivos() {
         return mascotasProxy.listarActivos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map> obtenerPorId(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> obtenerPorId(@PathVariable String id) {
         return mascotasProxy.obtenerPorId(id);
     }
 
     @PostMapping
-    public ResponseEntity<Map> crear(
+    public ResponseEntity<Map<String, Object>> crear(
             @RequestPart("reporte") String reporteJson,
             @RequestPart(value = "foto", required = false) MultipartFile foto,
             Authentication authentication) {
         String token = (String) authentication.getCredentials();
-        ResponseEntity<Map> response = mascotasProxy.crear(reporteJson, foto, token);
+        ResponseEntity<Map<String, Object>> response = mascotasProxy.crear(reporteJson, foto, token);
         dashboardService.invalidateCache();
         return response;
     }
 
     @GetMapping("/mis-reportes")
-    public ResponseEntity<List> misReportes(Authentication authentication) {
+    public ResponseEntity<List<Object>> misReportes(Authentication authentication) {
         String userId = (String) authentication.getPrincipal();
         String token = (String) authentication.getCredentials();
         return mascotasProxy.listarPorUsuario(userId, token);
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<Map> actualizarEstado(
+    public ResponseEntity<Map<String, Object>> actualizarEstado(
             @PathVariable String id,
             @RequestParam String estado,
             Authentication authentication) {
         String token = (String) authentication.getCredentials();
-        ResponseEntity<Map> response = mascotasProxy.actualizarEstado(id, estado, token);
+        ResponseEntity<Map<String, Object>> response = mascotasProxy.actualizarEstado(id, estado, token);
         dashboardService.invalidateCache();
         return response;
     }

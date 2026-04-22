@@ -53,6 +53,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    @SuppressWarnings("null")
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         template.setMessageConverter(jsonMessageConverter());

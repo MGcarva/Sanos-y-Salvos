@@ -24,6 +24,7 @@ public class GeolocalizacionListener {
     private final RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = RabbitMQConfig.GEO_QUEUE)
+    @SuppressWarnings("null")
     public void handleReporteNuevo(ReporteNuevoEvent event) {
         log.info("Evento recibido: reporte {} tipo {}", event.getReporteId(), event.getTipo());
 

@@ -40,6 +40,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(subject)
+                .id(UUID.randomUUID().toString())
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expiration))
                 .signWith(signingKey)

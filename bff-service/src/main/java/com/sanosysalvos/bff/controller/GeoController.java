@@ -1,6 +1,5 @@
 package com.sanosysalvos.bff.controller;
 
-import com.sanosysalvos.bff.service.CoincidenciasProxyService;
 import com.sanosysalvos.bff.service.GeoProxyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +17,12 @@ public class GeoController {
     private final GeoProxyService geoProxy;
 
     @GetMapping("/heatmap")
-    public ResponseEntity<List> heatmap(@RequestParam(required = false) String tipo) {
+    public ResponseEntity<List<Object>> heatmap(@RequestParam(required = false) String tipo) {
         return geoProxy.getHeatmap(tipo);
     }
 
     @GetMapping("/nearby")
-    public ResponseEntity<List> nearby(
+    public ResponseEntity<List<Object>> nearby(
             @RequestParam Double lat,
             @RequestParam Double lng,
             @RequestParam(defaultValue = "5000") Double radiusMeters) {
@@ -31,7 +30,7 @@ public class GeoController {
     }
 
     @GetMapping("/clusters")
-    public ResponseEntity<List> clusters() {
+    public ResponseEntity<List<Object>> clusters() {
         return geoProxy.getClusters();
     }
 }
