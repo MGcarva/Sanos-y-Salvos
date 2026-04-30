@@ -7,6 +7,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +25,7 @@ import java.util.List;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
     private final SecretKey signingKey;
 
     public JwtAuthFilter(@Value("${jwt.secret}") String secret) {
@@ -49,7 +52,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + rol));
                 var auth = new UsernamePasswordAuthenticationToken(userId, token, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                log.error("JWT validation failed: {} — {}", e.getClass().getSimpleName(), e.getMessage());
             }
         }
         filterChain.doFilter(request, response);
