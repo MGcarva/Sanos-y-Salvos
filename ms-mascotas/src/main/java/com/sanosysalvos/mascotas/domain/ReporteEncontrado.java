@@ -15,7 +15,7 @@ public class ReporteEncontrado extends Reporte {
     private boolean tieneCollar;
 
     @Builder(builderMethodName = "encontradoBuilder")
-    public ReporteEncontrado(java.util.UUID userId, String especie, String raza, String nombre,
+    public ReporteEncontrado(java.util.UUID userId, Especie especie, Raza raza, String nombre,
                              String color, Tamano tamano, String descripcion,
                              Double lat, Double lng, String direccion,
                              java.time.LocalDateTime fechaEvento,

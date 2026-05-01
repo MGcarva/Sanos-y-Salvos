@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,11 +21,13 @@ public abstract class Reporte {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(length = 100)
-    private String especie;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "especie_id", nullable = false)
+    private Especie especie;
 
-    @Column(length = 100)
-    private String raza;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "raza_id")
+    private Raza raza;
 
     @Column(length = 100)
     private String nombre;

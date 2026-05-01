@@ -14,8 +14,10 @@ public class ReporteResponseDTO {
     private UUID id;
     private UUID userId;
     private String tipo;
-    private String especie;
-    private String raza;
+    private Integer especieId;
+    private String especieNombre;
+    private Integer razaId;
+    private String razaNombre;
     private String nombre;
     private String color;
     private Tamano tamano;

@@ -14,7 +14,7 @@ public class ReportePerdido extends Reporte {
     private BigDecimal recompensa;
 
     @Builder(builderMethodName = "perdidoBuilder")
-    public ReportePerdido(java.util.UUID userId, String especie, String raza, String nombre,
+    public ReportePerdido(java.util.UUID userId, Especie especie, Raza raza, String nombre,
                           String color, Tamano tamano, String descripcion,
                           Double lat, Double lng, String direccion,
                           java.time.LocalDateTime fechaEvento, BigDecimal recompensa) {

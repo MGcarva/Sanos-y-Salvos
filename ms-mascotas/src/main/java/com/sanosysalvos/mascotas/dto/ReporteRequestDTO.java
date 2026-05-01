@@ -13,10 +13,10 @@ public class ReporteRequestDTO {
     @NotBlank(message = "El tipo es obligatorio (PERDIDO o ENCONTRADO)")
     private String tipo;
 
-    @NotBlank(message = "La especie es obligatoria")
-    private String especie;
+    @NotNull(message = "El ID de especie es obligatorio")
+    private Integer especieId;
 
-    private String raza;
+    private Integer razaId; // nullable
     private String nombre;
     private String color;
     private Tamano tamano;

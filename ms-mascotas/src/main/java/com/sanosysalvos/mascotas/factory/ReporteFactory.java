@@ -9,12 +9,12 @@ import java.util.UUID;
 @Component
 public class ReporteFactory {
 
-    public Reporte crear(ReporteRequestDTO dto, UUID userId) {
+    public Reporte crear(ReporteRequestDTO dto, UUID userId, Especie especie, Raza raza) {
         return switch (dto.getTipo().toUpperCase()) {
             case "PERDIDO" -> ReportePerdido.perdidoBuilder()
                     .userId(userId)
-                    .especie(dto.getEspecie())
-                    .raza(dto.getRaza())
+                    .especie(especie)
+                    .raza(raza)
                     .nombre(dto.getNombre())
                     .color(dto.getColor())
                     .tamano(dto.getTamano())
@@ -27,8 +27,8 @@ public class ReporteFactory {
                     .build();
             case "ENCONTRADO" -> ReporteEncontrado.encontradoBuilder()
                     .userId(userId)
-                    .especie(dto.getEspecie())
-                    .raza(dto.getRaza())
+                    .especie(especie)
+                    .raza(raza)
                     .nombre(dto.getNombre())
                     .color(dto.getColor())
                     .tamano(dto.getTamano())

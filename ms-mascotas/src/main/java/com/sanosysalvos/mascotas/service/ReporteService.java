@@ -3,6 +3,8 @@ package com.sanosysalvos.mascotas.service;
 import com.sanosysalvos.mascotas.domain.*;
 import com.sanosysalvos.mascotas.dto.*;
 import com.sanosysalvos.mascotas.factory.ReporteFactory;
+import com.sanosysalvos.mascotas.repository.EspecieRepository;
+import com.sanosysalvos.mascotas.repository.RazaRepository;
 import com.sanosysalvos.mascotas.repository.ReporteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +22,24 @@ import java.util.stream.Collectors;
 public class ReporteService {
 
     private final ReporteRepository reporteRepository;
+    private final EspecieRepository especieRepository;
+    private final RazaRepository razaRepository;
     private final ReporteFactory reporteFactory;
     private final MinioService minioService;
     private final EventPublisher eventPublisher;
 
     @Transactional
     public ReporteResponseDTO crearReporte(ReporteRequestDTO dto, MultipartFile foto, UUID userId) {
-        Reporte reporte = reporteFactory.crear(dto, userId);
+        Especie especie = especieRepository.findById(dto.getEspecieId())
+                .orElseThrow(() -> new IllegalArgumentException("Especie no encontrada: " + dto.getEspecieId()));
 
+        Raza raza = null;
+        if (dto.getRazaId() != null) {
+            raza = razaRepository.findById(dto.getRazaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Raza no encontrada: " + dto.getRazaId()));
+        }
+
+        Reporte reporte = reporteFactory.crear(dto, userId, especie, raza);
         reporte = reporteRepository.save(reporte);
 
         if (foto != null && !foto.isEmpty()) {
@@ -75,12 +87,17 @@ public class ReporteService {
     }
 
     private ReporteResponseDTO toResponseDTO(Reporte r) {
+        Especie especie = r.getEspecie();
+        Raza raza = r.getRaza();
+
         ReporteResponseDTO.ReporteResponseDTOBuilder builder = ReporteResponseDTO.builder()
                 .id(r.getId())
                 .userId(r.getUserId())
                 .tipo(r.getTipo())
-                .especie(r.getEspecie())
-                .raza(r.getRaza())
+                .especieId(especie != null ? especie.getId() : null)
+                .especieNombre(especie != null ? especie.getNombre() : null)
+                .razaId(raza != null ? raza.getId() : null)
+                .razaNombre(raza != null ? raza.getNombre() : null)
                 .nombre(r.getNombre())
                 .color(r.getColor())
                 .tamano(r.getTamano())
