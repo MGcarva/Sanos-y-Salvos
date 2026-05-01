@@ -1,13 +1,13 @@
 package com.sanosysalvos.coincidencias.listener;
 
-import com.sanosysalvos.coincidencias.config.RabbitMQConfig;
 import com.sanosysalvos.coincidencias.domain.Coincidencia;
 import com.sanosysalvos.coincidencias.dto.GeoCompletadoEvent;
 import com.sanosysalvos.coincidencias.service.CoincidenciaService;
+import io.awspring.cloud.sqs.annotation.SqsListener;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,27 +19,35 @@ import java.util.Map;
 public class CoincidenciasListener {
 
     private final CoincidenciaService coincidenciaService;
-    private final RabbitTemplate rabbitTemplate;
+    private final SqsTemplate sqsTemplate;
 
-    @RabbitListener(queues = RabbitMQConfig.COINCIDENCIAS_QUEUE)
+    @Value("${sqs.queue.notificaciones:#{null}}")
+    private String notificacionesUrl;
+
+    @SqsListener("${sqs.queue.geo-completados}")
     public void handleGeoCompletado(GeoCompletadoEvent event) {
-        log.info("Evento GeoCompletado recibido: reporte {} tipo {}", event.getReporteId(), event.getTipo());
+        log.info("Evento GeoCompletado recibido via SQS: reporte {} tipo {}",
+                event.getReporteId(), event.getTipo());
 
         try {
             List<Coincidencia> matches = coincidenciaService.procesarEvento(event);
 
             for (Coincidencia match : matches) {
-                rabbitTemplate.convertAndSend(
-                        RabbitMQConfig.EXCHANGE,
-                        RabbitMQConfig.NOTIFICATION_ROUTING_KEY,
-                        Map.of(
-                                "coincidenciaId", match.getId().toString(),
-                                "reportePerdidoId", match.getReportePerdidoId().toString(),
-                                "reporteEncontradoId", match.getReporteEncontradoId().toString(),
-                                "scoreTotal", match.getScoreTotal(),
-                                "distanciaKm", match.getDistanciaKm()
-                        ));
                 match.setNotificado(true);
+
+                // Publicar notificación a cola SQS (si está configurada)
+                if (notificacionesUrl != null) {
+                    sqsTemplate.send(to -> to.queue(notificacionesUrl).payload(Map.of(
+                            "coincidenciaId", match.getId().toString(),
+                            "reportePerdidoId", match.getReportePerdidoId().toString(),
+                            "reporteEncontradoId", match.getReporteEncontradoId().toString(),
+                            "scoreTotal", match.getScoreTotal(),
+                            "distanciaKm", match.getDistanciaKm()
+                    )));
+                } else {
+                    log.info("Coincidencia {} encontrada (score={}, distancia={}km) — notificación pendiente de configuración",
+                            match.getId(), match.getScoreTotal(), match.getDistanciaKm());
+                }
             }
 
             log.info("Procesamiento completado para reporte {}: {} coincidencias",

@@ -45,6 +45,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- BOM necesario para spring-cloud-aws-starter-sqs y sus dependencias AWS SDK v2 -->
+            <dependency>
+                <groupId>io.awspring.cloud</groupId>
+                <artifactId>spring-cloud-aws-dependencies</artifactId>
+                <version>3.1.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

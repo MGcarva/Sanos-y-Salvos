@@ -33,6 +33,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reportes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/mascotas/especies/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/mascotas/razas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/coincidencias/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/geo/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/dashboard/**").permitAll()

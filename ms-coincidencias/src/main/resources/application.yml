@@ -17,11 +17,17 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: false
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: 5672
-    username: ${RABBITMQ_USER:guest}
-    password: ${RABBITMQ_PASS:guest}
+  cloud:
+    aws:
+      region:
+        static: us-east-1
+      credentials:
+        use-default-aws-credentials-chain: true
+
+sqs:
+  queue:
+    geo-completados: ${SQS_GEO_COMPLETADOS_URL:https://sqs.us-east-1.amazonaws.com/000000000000/geo-completados}
+    notificaciones: ${SQS_NOTIFICACIONES_URL:}
 
 jwt:
   secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
