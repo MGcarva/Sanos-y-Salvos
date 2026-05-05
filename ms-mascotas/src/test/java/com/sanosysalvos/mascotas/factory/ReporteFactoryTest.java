@@ -17,10 +17,20 @@ class ReporteFactoryTest {
     @Test
     void crear_perdido_returnsReportePerdido() {
         UUID userId = UUID.randomUUID();
+        
+        Especie especie = new Especie();
+        especie.setId(1);
+        especie.setNombre("Perro");
+        
+        Raza raza = new Raza();
+        raza.setId(1);
+        raza.setNombre("Husky");
+        raza.setEspecie(especie);
+
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("PERDIDO")
-                .especie("Perro")
-                .raza("Husky")
+                .especieId(1)
+                .razaId(1)
                 .nombre("Luna")
                 .color("Blanco y negro")
                 .tamano(Tamano.GRANDE)
@@ -31,12 +41,12 @@ class ReporteFactoryTest {
                 .recompensa(BigDecimal.valueOf(200000))
                 .build();
 
-        Reporte result = factory.crear(dto, userId);
+        Reporte result = factory.crear(dto, userId, especie, raza);
 
         assertThat(result).isInstanceOf(ReportePerdido.class);
         assertThat(result.getUserId()).isEqualTo(userId);
-        assertThat(result.getEspecie()).isEqualTo("Perro");
-        assertThat(result.getRaza()).isEqualTo("Husky");
+        assertThat(result.getEspecie().getNombre()).isEqualTo("Perro");
+        assertThat(result.getRaza().getNombre()).isEqualTo("Husky");
         assertThat(result.getTipo()).isEqualTo("PERDIDO");
         assertThat(((ReportePerdido) result).getRecompensa()).isEqualTo(BigDecimal.valueOf(200000));
     }
@@ -44,10 +54,20 @@ class ReporteFactoryTest {
     @Test
     void crear_encontrado_returnsReporteEncontrado() {
         UUID userId = UUID.randomUUID();
+        
+        Especie especie = new Especie();
+        especie.setId(2);
+        especie.setNombre("Gato");
+        
+        Raza raza = new Raza();
+        raza.setId(2);
+        raza.setNombre("Siamés");
+        raza.setEspecie(especie);
+
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("ENCONTRADO")
-                .especie("Gato")
-                .raza("Siamés")
+                .especieId(2)
+                .razaId(2)
                 .color("Crema")
                 .tamano(Tamano.PEQUENO)
                 .descripcion("Gato encontrado en calle")
@@ -55,7 +75,7 @@ class ReporteFactoryTest {
                 .tieneCollar(true)
                 .build();
 
-        Reporte result = factory.crear(dto, userId);
+        Reporte result = factory.crear(dto, userId, especie, raza);
 
         assertThat(result).isInstanceOf(ReporteEncontrado.class);
         assertThat(result.getTipo()).isEqualTo("ENCONTRADO");
@@ -67,11 +87,18 @@ class ReporteFactoryTest {
     void crear_invalidTipo_throwsException() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("INVALIDO")
-                .especie("Perro")
+                .especieId(1)
                 .descripcion("Test")
                 .build();
 
-        assertThatThrownBy(() -> factory.crear(dto, UUID.randomUUID()))
+        Especie especie = new Especie();
+        especie.setId(1);
+        especie.setNombre("Perro");
+        
+        Raza raza = new Raza();
+        raza.setId(1);
+
+        assertThatThrownBy(() -> factory.crear(dto, UUID.randomUUID(), especie, raza))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("inválido");
     }
@@ -80,11 +107,18 @@ class ReporteFactoryTest {
     void crear_perdido_caseInsensitive() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("perdido")
-                .especie("Perro")
+                .especieId(1)
                 .descripcion("Test")
                 .build();
 
-        Reporte result = factory.crear(dto, UUID.randomUUID());
+        Especie especie = new Especie();
+        especie.setId(1);
+        especie.setNombre("Perro");
+        
+        Raza raza = new Raza();
+        raza.setId(1);
+
+        Reporte result = factory.crear(dto, UUID.randomUUID(), especie, raza);
 
         assertThat(result).isInstanceOf(ReportePerdido.class);
     }

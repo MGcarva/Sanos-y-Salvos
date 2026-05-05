@@ -3,6 +3,7 @@
 .env.production
 .env.local
 *.pem
+*.key
 
 # Java / Maven
 target/
@@ -31,3 +32,10 @@ docker-compose.override.yml
 
 # Backups
 backups/
+
+# Logs
+logs/
+*.log
+
+# CI/CD
+.github/

@@ -37,15 +37,27 @@ class ReporteServiceTest {
 
     private UUID userId;
     private ReportePerdido testReporte;
+    private Especie especiePerro;
+    private Raza razaLabrador;
 
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
+        
+        especiePerro = new Especie();
+        especiePerro.setId(1);
+        especiePerro.setNombre("Perro");
+        
+        razaLabrador = new Raza();
+        razaLabrador.setId(1);
+        razaLabrador.setNombre("Labrador");
+        razaLabrador.setEspecie(especiePerro);
+        
         testReporte = new ReportePerdido();
         testReporte.setId(UUID.randomUUID());
         testReporte.setUserId(userId);
-        testReporte.setEspecie("Perro");
-        testReporte.setRaza("Labrador");
+        testReporte.setEspecie(especiePerro);
+        testReporte.setRaza(razaLabrador);
         testReporte.setNombre("Max");
         testReporte.setColor("Dorado");
         testReporte.setTamano(Tamano.GRANDE);
@@ -61,8 +73,8 @@ class ReporteServiceTest {
     void crearReporte_sinFoto_success() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("PERDIDO")
-                .especie("Perro")
-                .raza("Labrador")
+                .especieId(1)
+                .razaId(1)
                 .nombre("Max")
                 .color("Dorado")
                 .tamano(Tamano.GRANDE)
@@ -71,13 +83,13 @@ class ReporteServiceTest {
                 .lng(-74.072)
                 .build();
 
-        when(reporteFactory.crear(dto, userId)).thenReturn(testReporte);
+        when(reporteFactory.crear(eq(dto), eq(userId), any(Especie.class), any(Raza.class))).thenReturn(testReporte);
         when(reporteRepository.save(any(Reporte.class))).thenReturn(testReporte);
 
         ReporteResponseDTO response = reporteService.crearReporte(dto, null, userId);
 
         assertThat(response).isNotNull();
-        assertThat(response.getEspecie()).isEqualTo("Perro");
+        assertThat(response.getEspecieNombre()).isEqualTo("Perro");
         assertThat(response.getTipo()).isEqualTo("PERDIDO");
         verify(eventPublisher).publishReporteNuevo(testReporte);
         verify(minioService, never()).uploadImage(any(), any());
@@ -87,14 +99,14 @@ class ReporteServiceTest {
     void crearReporte_conFoto_success() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("PERDIDO")
-                .especie("Gato")
+                .especieId(2)
                 .descripcion("Gato perdido")
                 .build();
 
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.isEmpty()).thenReturn(false);
 
-        when(reporteFactory.crear(dto, userId)).thenReturn(testReporte);
+        when(reporteFactory.crear(eq(dto), eq(userId), any(Especie.class), any(Raza.class))).thenReturn(testReporte);
         when(reporteRepository.save(any(Reporte.class))).thenReturn(testReporte);
         when(minioService.uploadImage(mockFile, testReporte.getId())).thenReturn("http://minio:9000/mascotas-fotos/foto.jpg");
 
@@ -112,7 +124,7 @@ class ReporteServiceTest {
         List<ReporteResponseDTO> result = reporteService.listarActivos();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getEspecie()).isEqualTo("Perro");
+        assertThat(result.get(0).getEspecieNombre()).isEqualTo("Perro");
     }
 
     @Test
@@ -168,12 +180,12 @@ class ReporteServiceTest {
     void crearReporte_perdido_includesRecompensa() {
         ReporteRequestDTO dto = ReporteRequestDTO.builder()
                 .tipo("PERDIDO")
-                .especie("Perro")
+                .especieId(1)
                 .descripcion("Perro perdido")
                 .recompensa(BigDecimal.valueOf(100000))
                 .build();
 
-        when(reporteFactory.crear(dto, userId)).thenReturn(testReporte);
+        when(reporteFactory.crear(eq(dto), eq(userId), any(Especie.class), any(Raza.class))).thenReturn(testReporte);
         when(reporteRepository.save(any(Reporte.class))).thenReturn(testReporte);
 
         ReporteResponseDTO response = reporteService.crearReporte(dto, null, userId);

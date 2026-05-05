@@ -5,7 +5,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HexFormat;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @Component
 public class JwtUtils {
 
-    private final SecretKey signingKey;
+    private final javax.crypto.SecretKey signingKey;
     private final long accessExpiration;
     private final long refreshExpiration;
 
