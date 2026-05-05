@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {

@@ -1,16 +1,16 @@
 package com.sanosysalvos.geo.listener;
 
-import com.sanosysalvos.geo.config.RabbitMQConfig;
 import com.sanosysalvos.geo.domain.UbicacionReporte;
 import com.sanosysalvos.geo.dto.GeoCompletadoEvent;
 import com.sanosysalvos.geo.dto.ReporteNuevoEvent;
 import com.sanosysalvos.geo.repository.UbicacionReporteRepository;
 import com.sanosysalvos.geo.service.ClusteringService;
 import com.sanosysalvos.geo.service.GeocodingService;
+import io.awspring.cloud.sqs.annotation.SqsListener;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,11 +21,14 @@ public class GeolocalizacionListener {
     private final UbicacionReporteRepository repository;
     private final GeocodingService geocodingService;
     private final ClusteringService clusteringService;
-    private final RabbitTemplate rabbitTemplate;
+    private final SqsTemplate sqsTemplate;
 
-    @RabbitListener(queues = RabbitMQConfig.GEO_QUEUE)
+    @Value("${sqs.queue.geo-completados}")
+    private String geoCompletadosUrl;
+
+    @SqsListener("${sqs.queue.reportes-nuevos}")
     public void handleReporteNuevo(ReporteNuevoEvent event) {
-        log.info("Evento recibido: reporte {} tipo {}", event.getReporteId(), event.getTipo());
+        log.info("Evento recibido via SQS: reporte {} tipo {}", event.getReporteId(), event.getTipo());
 
         try {
             Double lat = event.getLat();
@@ -76,7 +79,7 @@ public class GeolocalizacionListener {
             // Recargar con cluster actualizado
             ubicacion = repository.findByReporteId(event.getReporteId()).orElse(ubicacion);
 
-            // Publicar evento para ms-coincidencias
+            // Publicar evento para ms-coincidencias via SQS
             GeoCompletadoEvent geoEvent = GeoCompletadoEvent.builder()
                     .reporteId(ubicacion.getReporteId())
                     .userId(ubicacion.getUserId())
@@ -92,12 +95,8 @@ public class GeolocalizacionListener {
                     .clusterId(ubicacion.getClusterId())
                     .build();
 
-            rabbitTemplate.convertAndSend(
-                    RabbitMQConfig.EXCHANGE,
-                    RabbitMQConfig.COINCIDENCIAS_ROUTING_KEY,
-                    geoEvent);
-
-            log.info("GeoCompletadoEvent publicado para reporte {}", event.getReporteId());
+            sqsTemplate.send(to -> to.queue(geoCompletadosUrl).payload(geoEvent));
+            log.info("GeoCompletadoEvent publicado en SQS para reporte {}", event.getReporteId());
 
         } catch (Exception e) {
             log.error("Error procesando reporte {}: {}", event.getReporteId(), e.getMessage(), e);
